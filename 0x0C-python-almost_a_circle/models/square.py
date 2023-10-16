@@ -1,72 +1,49 @@
 #!/usr/bin/python3
-"""square module"""
+'''Module for Square class.'''
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    """defines the class square"""
+    '''A Square class.'''
 
     def __init__(self, size, x=0, y=0, id=None):
-        """initializes a square"""
+        '''Constructor.'''
         super().__init__(size, size, x, y, id)
 
     def __str__(self):
-        """string representation of a square"""
-        r = "[{}] ({}) ".format(self.__class__.__name__, self.id)
-        c = "{}/{} - {}".format(self.x, self.y, self.width)
-        return r + c
+        '''Returns string info about this square.'''
+        return '[{}] ({}) {}/{} - {}'.\
+            format(type(self).__name__, self.id, self.x, self.y, self.width)
 
     @property
     def size(self):
-        """getter for size"""
+        '''Size of this square.'''
         return self.width
 
     @size.setter
     def size(self, value):
-        """setter for size"""
-        if type(value) != int:
-            raise TypeError("width must be an integer")
-        if value <= 0:
-            raise ValueError("width must be > 0")
         self.width = value
         self.height = value
 
+    def __update(self, id=None, size=None, x=None, y=None):
+        '''Internal method that updates instance attributes via */**args.'''
+        if id is not None:
+            self.id = id
+        if size is not None:
+            self.size = size
+        if x is not None:
+            self.x = x
+        if y is not None:
+            self.y = y
+
     def update(self, *args, **kwargs):
-        """update square that assigns attributes to args"""
-        if args and len(args) != 0:
-            for i in range(len(args)):
-                if i == 0:
-                    if args[i] is None:
-                        self.__init__(
-                                self.width, self.width, self.x, self.y)
-                    else:
-                        self.id = args[i]
-                if i == 1:
-                    self.width = args[i]
-                    self.height = args[i]
-                if i == 2:
-                    self.x = args[i]
-                if i == 3:
-                    self.y = args[i]
-        else:
-            if kwargs and len(kwargs) != 0:
-                for key, value in kwargs.items():
-                    if key == "id":
-                        if value is None:
-                            self.__init__(
-                                    self.width, self.width, self.x, self.y)
-                        else:
-                            self.id = value
-                    elif key == "size":
-                        self.width = value
-                        self.height = value
-                    elif key == "x":
-                        self.x = value
-                    elif key == "y":
-                        self.y = value
+        '''Updates instance attributes via no-keyword & keyword args.'''
+        if args:
+            self.__update(*args)
+        elif kwargs:
+            self.__update(**kwargs)
 
     def to_dictionary(self):
-        """returns dictionary representation
-        of a square"""
-        return {"id": self.id, "size": self.size,
+        '''Returns dictionary representation of this class.'''
+        return {"id": self.id, "size": self.width,
                 "x": self.x, "y": self.y}
